@@ -1,0 +1,49 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<h1><u>Статистика</u></h1>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <h2><b><u>Кнопки</u></b></h2>
+      <h3>{{ texts.scan_card_btn }}: {{ stats.scan_card_btn }}</h3>
+      <h3>{{ texts.profile_btn }}: {{ stats.profile_btn }}</h3>
+      <h3>{{ texts.events_btn }}: {{ stats.events_btn }}</h3>
+      <h3>{{ texts.people_near_btn }}: {{ stats.people_near_btn }}</h3>
+      <h3>{{ texts.chosen_btn }}: {{ stats.chosen_btn }}</h3>
+      <h3>{{ texts.edit_profile_btn }}: {{ stats.edit_profile_btn }}</h3>
+      <h3>{{ texts.delete_profile_btn }}: {{ stats.delete_profile_btn }}</h3>
+      <h3>{{ texts.share_btn }}: {{ stats.share_btn }}</h3>
+      <h3>{{ texts.send_location_btn }}: {{ stats.send_location_btn }}</h3>
+      <h3>{{ texts.use_old_location_btn }}: {{ stats.chosen_people_btn }}</h3>
+      <h3>{{ texts.dialogs_btn }}: {{ stats.dialogs_btn }}</h3>
+      <h3>{{ texts.find_randomly_btn }}: {{ stats.find_randomly_btn }}</h3>
+      <h3>{{ texts.filter_find_btn }}: {{ stats.filter_find_btn }}</h3>
+      <h3>{{ texts.add_in_chosen_btn }}: {{ stats.add_in_chosen_btn }}</h3>
+      <h3>{{ texts.next_btn }}: {{ stats.next_btn }}</h3>
+      <h3>{{ texts.previous_btn }}: {{ stats.previous_btn }}</h3>
+    </div>
+    <div class="col-md-4">
+      <h2><b><u>Общаться</u></b></h2>
+      <h3>Нажали кнопку общаться: {{ stats.connect_btn }}</h3>
+      <h3>Приняли запрос общаться: {{ stats.accept_btn }}</h3>
+      <h3>Отклонили запрос общаться: {{ stats.refuse_btn }}</h3>
+
+      &nbsp;
+
+      <h2><b><u>Количество анкет</u></b></h2>
+      <h3>Всего пользователей: {{ stats.all_users }}</h3>
+      <h3>Не авторизованных: {{ stats.all_users - stats.authorised_users }}</h3>
+
+      &nbsp;
+
+      <h2><b><u>Количество приглашенных</u></b></h2>
+      <h3>По ссылке: {{ stats.referral_sharing }}</h3>
+      <h3>По QR коду: {{ stats.qr_sharing }}</h3>
+      <h3>В чате: {{ stats.chat_sharing }}</h3>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

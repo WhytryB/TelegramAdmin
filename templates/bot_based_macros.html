@@ -1,0 +1,5 @@
+{% macro bot_based_form_tail(bot) %}
+    <script>
+        $('#bot_id').val('{{ bot.id }}').closest('.form-group').hide();
+    </script>
+{% endmacro %}

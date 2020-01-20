@@ -1,0 +1,34 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+    <div class="content-section">
+        <a href="/admin/bots/{{ bot_id }}/texts">Вернуться к текстам</a>
+        <form method="POST" action="">
+
+            <h3>Greet Msg:</h3><textarea class="form-control" name="greet_msg"></textarea>
+            <h4>Применить это к:</h4>
+            <fieldset class="form-group">
+                <label>
+                    <input class="bot-check-all" type="checkbox">
+                    <b>Все боты</b>
+                </label>
+                <br>
+                {% for bot in bots %}
+                    <label>
+                        <input class="bot-check" name="bots{{ bot.id }}" type="checkbox" value="{{ bot.id }}">
+                        <span style="padding-right: 8px">{{ bot.name }}</span>
+                    </label>
+                {% endfor %}
+            </fieldset>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+{% endblock body %}
+{% block tail %}
+    <script>
+        $('.bot-check-all').change(function () {
+            $('.bot-check').prop('checked', $(this).prop('checked'));
+        });
+    </script>
+{% endblock %}

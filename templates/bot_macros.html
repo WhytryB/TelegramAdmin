@@ -1,0 +1,99 @@
+{% macro bot_form_photo() %}
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <img id="bot_photo" class="mb-2">
+            <h5 id="bot_name"></h5>
+        </div>
+    </div>
+{% endmacro %}
+{% macro bot_form_tail(bot) %}
+    <script>
+
+        var submit = $('input[type="submit"]');
+        var nameDisplay = $('#bot_name');
+        var nameInput = $('#name');
+        var tokenInput = $('#token');
+        var photoImg = $('#bot_photo');
+        var photoInput = $('#photo_file_id');
+        var tIdInput = $('#t_id');
+        var statIdInput = $('#stat');
+        var activeInput = $('#active');
+
+        var fetchTimeout;
+
+        $('input[name="_add_another"]').hide();
+        $('input[name="_continue_editing"]').hide();
+        photoInput.closest('.form-group').hide();
+        nameInput.closest('.form-group').hide();
+        tIdInput.closest('.form-group').hide();
+        statIdInput.closest('.form-group').hide();
+        activeInput.closest('.form-group').hide();
+        photoImg.hide();
+
+        function displayName() {
+            if(tIdInput.val()) {
+                nameDisplay.css('display', 'inline-block');
+                nameDisplay.html('<b>ID:</b> ' + tIdInput.val() + '<br><b>Name:</b> ' + nameInput.val());
+            } else {
+                nameDisplay.hide();
+            }
+        }
+
+        {% if bot %}
+        if(photoInput.val()) {
+            photoImg.attr('src', '/admin/bots/{{ bot.id }}/photo');
+            photoImg.css('display', 'inline-block');
+        }
+        {% endif %}
+
+        displayName();
+
+        tokenInput.keydown(function () {
+            tokenInput.closest('.form-group').removeClass('has-error has-success');
+            submit.attr('disabled', 'disabled');
+            photoImg.hide();
+            photoInput.val('');
+            tIdInput.val('');
+            statIdInput.val('');
+            nameInput.val('');
+            displayName();
+            if (fetchTimeout) {
+                clearTimeout(fetchTimeout);
+            }
+            fetchTimeout = setTimeout(function () {
+                if (tokenInput.val()) {
+                    $.get('/admin/bots/fetch', {
+                        token: tokenInput.val()
+                    }, function (r) {
+                        if (r.photo) {
+                            photoImg.attr('src', 'data:image/png;base64,' + r.photo);
+                            photoInput.val(r.photo_file_id);
+                            photoImg.css('display', 'inline-block');
+                        }
+                        nameInput.val(r.name);
+                        tIdInput.val(r.t_id);
+                        statIdInput.val(r.stat);
+                        displayName();
+                        submit.attr('disabled', null);
+                        tokenInput.closest('.form-group').addClass('has-success');
+                    }, 'json').error(function () {
+                        tokenInput.closest('.form-group').addClass('has-error');
+                    });
+                }
+            }, 100);
+        });
+    </script>
+
+    <style>
+        #bot_photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 60px;
+            margin: 20px 10px 20px 0;
+        }
+        #bot_name {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+{% endmacro %}

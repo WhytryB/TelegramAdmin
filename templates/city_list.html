@@ -1,0 +1,49 @@
+{% extends 'admin/model/list.html' %}
+{% block body %}
+    {{ super() }}
+{% endblock %}
+
+{% block head_css %}
+    {{ super() }}
+    <style>
+        td[data-city] {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block list_row scoped %}
+    {% if actions %}
+        <td>
+            <input type="checkbox" name="rowid" class="action-checkbox" value="{{ get_pk_value(row) }}" title="{{ _gettext('Select record') }}" />
+        </td>
+    {% endif %}
+    {% block list_row_actions_column scoped %}
+        {{ super() }}
+    {% endblock %}
+
+    {% for c, name in list_columns %}
+        <td class="col-{{c}}" data-city="{{ row.id }}">
+            {% if admin_view.is_editable(c) %}
+                {% set form = list_forms[get_pk_value(row)] %}
+                {% if form.csrf_token %}
+                    {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c), csrf=form.csrf_token._value()) }}
+                {% else %}
+                    {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c)) }}
+                {% endif %}
+            {% else %}
+                {{ get_value(row, c) }}
+            {% endif %}
+        </td>
+    {% endfor %}
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script>
+        $('td').click(function () {
+            if(this.dataset.city)
+                location.href = this.dataset.city
+        });
+    </script>
+{% endblock %}

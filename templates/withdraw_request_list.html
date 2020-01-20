@@ -1,0 +1,77 @@
+{% extends 'admin/model/list.html' %}
+{% block body %}
+    {{ super() }}
+{% endblock %}
+
+{% block head_css %}
+    {{ super() }}
+    <style>
+        .col-done {
+            width: 30px;
+        }
+    </style>
+{% endblock %}
+
+{% block list_row scoped %}
+    {% if actions %}
+        <td>
+            <input type="checkbox" name="rowid" class="action-checkbox" value="{{ get_pk_value(row) }}" title="{{ _gettext('Select record') }}" />
+        </td>
+    {% endif %}
+    {% block list_row_actions_column scoped %}
+        {{ super() }}
+    {% endblock %}
+
+    {% for c, name in list_columns %}
+        <td class="col-{{c}}" data-bot="{{ row.id }}">
+            {% if admin_view.is_editable(c) %}
+                {% set form = list_forms[get_pk_value(row)] %}
+                {% if form.csrf_token %}
+                    {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c), csrf=form.csrf_token._value()) }}
+                {% else %}
+                    {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c)) }}
+                {% endif %}
+            {% elif c == 'done' %}
+                <input class="set-done-checkbox" type="checkbox"{% if row.done %} checked{% endif %} data-wr="{{ row.id }}">
+            {% else %}
+                {{ get_value(row, c) }}
+            {% endif %}
+        </td>
+    {% endfor %}
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}
+    <script>
+        $('.set-done-checkbox').change(function (evt) {
+            var val = $(this).prop("checked");
+            if(!val) {
+                evt.preventDefault();
+                $(this).prop("checked", true);
+                return;
+            }
+            $.ajax({
+                url: this.dataset.wr + '/done',
+                type: "POST",
+                success: function (r) {
+                    if(r.error) {
+                        switch (r.error) {
+                            case 'LOW_BALANCE':
+                                alert('У пользователя низкий баланс.');
+                                break;
+                            default:
+                                alert(r.error);
+                                break;
+                        }
+                    } else {
+                        alert('Одобрено')
+                    }
+                },
+                error: function () {
+                    alert('Ошибка')
+                },
+                dataType: 'json'
+            });
+        });
+    </script>
+{% endblock %}

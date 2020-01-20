@@ -1,0 +1,40 @@
+{# my_list.html #}
+{# extends this template: #}
+{# [path to Python]\Envs\flaskadmin\Lib\site-packages\flask_admin\templates\bootstrap3\admin\model\list.html #}
+
+{% extends 'admin/model/list.html' %}
+
+{% macro last24() %}
+    <script>
+    const Http = new XMLHttpRequest();
+    const url='last24';
+    Http.open("GET", url);
+    Http.send();
+
+    console.log(url);
+
+    Http.onreadystatechange = (e) => {
+        console.log(Http.responseText);
+      document.getElementById('sub_24h').innerHTML = Http.responseText;
+    }
+    </script>
+{% endmacro %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block body %}
+    <h5>Количество подпищиков за последние 24 часа:</h5><h5 id="sub_24h" style="margin-bottom: 20px"></h5>
+    {{ last24() }}
+    <a href="/admin/userid">Export list USER ID</a>
+    <a href="/admin/username">Export list USERNAME</a>
+    {{ super() }}
+{% endblock %}
+
+{% block list_row_actions %}
+    <a href="{{ row.id }}/send_message">
+        <span class="fa fa-ok glyphicon glyphicon-send"></span>
+    </a>
+    {{ super() }}
+{% endblock %}

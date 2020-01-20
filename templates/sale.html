@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border"><a href="/">Вернуться в главное меню</a>
+                <a style="color: black !important; margin-left: 60px" href="/admin/bots/unsale">Вернуть скидку</a></legend>
+
+                <div class="form-group">
+                    {{ form.sale(class="form-control")}}
+                    {% if form.sale.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.sale.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+
+{% endblock content %}

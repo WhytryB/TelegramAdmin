@@ -1,0 +1,24 @@
+{# my_list.html #}
+{# extends this template: #}
+{# [path to Python]\Envs\flaskadmin\Lib\site-packages\flask_admin\templates\bootstrap3\admin\model\list.html #}
+
+{% extends 'admin/model/list.html' %}
+{% block body %}
+    {{ super() }}
+{% endblock %}
+
+{% block list_row_actions %}
+    {{ super() }}
+
+    {# Trying to Add a Special Action #}
+    {# Icons you can use: http://getbootstrap.com/components/ #}
+    <form class="icon" method="POST" action="/send_message">
+        <input name="user_id" value="{{ row.user_id }}" type="hidden">
+        <input name="message" value="{{ row.message_to_send }}" type="hidden">
+        <input name="msg" value="{{ row.message }}" type="hidden">
+        <button onclick="return confirm('Вы уверены, что хотите отправить это сообщение??');" title="Approve">
+          <span class="fa fa-ok glyphicon glyphicon-send"></span>
+        </button>
+    </form>
+
+{% endblock %}

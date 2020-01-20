@@ -1,0 +1,12 @@
+{% extends 'admin/model/create.html' %}
+{% from 'bot_macros.html' import bot_form_tail, bot_form_photo %}
+
+{% block create_form %}
+    {{ bot_form_photo() }}
+    {{ super() }}
+{% endblock %}
+
+{% block tail %}
+    {{ super() }}
+    {{ bot_form_tail() }}
+{% endblock %}

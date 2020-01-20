@@ -1,0 +1,8 @@
+{% extends 'admin/model/list.html' %}
+
+{% block list_row_actions %}
+    <a href="{{ row.id }}/send">
+        <span class="fa fa-ok glyphicon glyphicon-send"></span>
+    </a>
+    {{ super() }}
+{% endblock %}

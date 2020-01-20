@@ -1,0 +1,5 @@
+{% macro city_based_form_tail(city) %}
+    <script>
+        $('#city_id').val('{{ city.id }}').closest('.form-group').hide();
+    </script>
+{% endmacro %}

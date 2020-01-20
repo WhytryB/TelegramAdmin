@@ -1,0 +1,32 @@
+{% extends 'admin/model/create.html' %}
+{% from 'bot_based_macros.html' import bot_based_form_tail %}
+
+{% block body %}
+
+   {% block navlinks %}
+  <ul class="nav nav-tabs">
+    <li>
+        <a href="{{ return_url }}">{{ _gettext('List') }}</a>
+    </li>
+    <li class="active">
+        <a href="javascript:void(0)">{{ _gettext('Create') }}</a>
+    </li>
+  </ul>
+  {% endblock %}
+
+  {% block create_form %}
+         <a href="addmsg">Добавить greet Msg</a>
+    {{ lib.render_form(form, return_url, extra(), form_opts) }}
+  {% endblock %}
+
+{% endblock %}
+{% block tail %}
+    {{ super() }}
+    {{ bot_based_form_tail(bot) }}
+    <script>
+        var texts = {{ texts|safe }};
+        Object.keys(texts).forEach(function (name) {
+             $('#' + name).val(texts[name]);
+        });
+    </script>
+{% endblock %}

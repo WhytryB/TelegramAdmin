@@ -1,0 +1,11 @@
+{% extends 'admin/model/create.html' %}
+
+{% block tail %}
+    {{ super() }}
+    <script>
+        var texts = {{ texts|safe }};
+        Object.keys(texts).forEach(function (name) {
+             $('#' + name).val(texts[name]);
+        });
+    </script>
+{% endblock %}

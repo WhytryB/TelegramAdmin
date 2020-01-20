@@ -1,0 +1,17 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+    <div class="content-section">
+        <h4>Отправка сообщение пользователю {{ user.user_id }}</h4>
+        <form method="POST" action="">
+            <fieldset class="form-group">
+                <label class="col-md-10" style="padding-left: 0">
+                    <span>Текст сообщения</span>
+                    <textarea class="form-control" name="body" required></textarea>
+                </label>
+            </fieldset>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+{% endblock body %}

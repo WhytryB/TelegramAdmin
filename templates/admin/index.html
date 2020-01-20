@@ -1,0 +1,9 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+  {% if current_user.is_authenticated %}
+  <h1><a href={{ url_for('admin_bp.handle_logout') }}>Log out</a></h1>
+  {% else %}
+  <h1><a href={{ url_for('admin_bp.handle_login') }}>Log in</a></h1>
+  {% endif %}
+{% endblock %}

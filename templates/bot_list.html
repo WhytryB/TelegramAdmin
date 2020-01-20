@@ -1,0 +1,99 @@
+{% extends 'admin/model/list.html' %}
+{% block body %}
+    <input type="button" style="margin-bottom: 20px" value="Выключить всех ботов" onclick="$.get(window.location.href + 'off-all', function( data ) {
+  alert( 'Все боты выключены');
+  location.reload();
+});">
+    <input type="button" style="margin-bottom: 20px" value="Включить всех ботов" onclick="$.get(window.location.href + 'on-all', function( data ) {
+  alert( 'Все боты включены');
+  location.reload();
+});">
+    <input type="button" style="margin-bottom: 20px" value="Обновить статистику" onclick="$.get(window.location.href + 'statistics', function( data ) {
+  alert( 'Id обновлены');
+  location.reload();
+});">
+
+        <a style="color: black !important; margin-left: 270px; margin-right: 20px" href="/admin/bots/sale">Добавить скидку для всех ботов</a>
+        <a style="color: black !important;" href="/admin/bots/unsale">Вернуть скидку</a>
+    {{ lib.pager(page, num_pages, pager_url) }}
+    {{ super() }}
+{% endblock %}
+
+{% block head_css %}
+    {{ super() }}
+    <style>
+        table img {
+            width: 20px;
+            height: 20px;
+            border-radius: 20px;
+        }
+        td[data-bot] {
+            cursor: pointer;
+        }
+        .col-photo_file_id {
+            width: 40px;
+        }
+        .col-active {
+            width: 30px;
+        }
+    </style>
+{% endblock %}
+
+{% block list_row scoped %}
+    {% if actions %}
+        <td>
+            <input type="checkbox" name="rowid" class="action-checkbox" value="{{ get_pk_value(row) }}" title="{{ _gettext('Select record') }}" />
+        </td>
+    {% endif %}
+    {% block list_row_actions_column scoped %}
+        {{ super() }}
+    {% endblock %}
+    {% for c, name in list_columns %}
+        <td class="col-{{c}}" data-bot="{{ row.id }}">
+            {% if admin_view.is_editable(c) %}
+                {% set form = list_forms[get_pk_value(row)] %}
+                {% if form.csrf_token %}
+                    {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c), csrf=form.csrf_token._value()) }}
+                {% else %}
+                    {{ form[c](pk=get_pk_value(row), display_value=get_value(row, c)) }}
+                {% endif %}
+            {% elif c == 'photo_file_id' %}
+                {% if row.photo_file_id %}
+                    <img src="/admin/bots/{{ row.id }}/photo"/>
+                {% endif %}
+            {% elif c == 'active' %}
+                <input class="set-active-checkbox" type="checkbox"{% if row.active %} checked{% endif %} data-bot="{{ row.id }}">
+            {% else %}
+                {{ get_value(row, c) }}
+            {% endif %}
+        </td>
+    {% endfor %}
+
+{% endblock %}
+
+
+
+{% block tail_js %}
+    {{ super() }}
+    <script>
+        $('td').click(function (evt) {
+            if(evt.target === evt.currentTarget && this.dataset.bot)
+                location.href = this.dataset.bot
+        });
+        $('.set-active-checkbox').change(function () {
+            var val = $(this).prop("checked");
+            let smth = this.dataset.bot + '/active?active=' + val;
+            $.ajax({
+                url: this.dataset.bot + '/active?active=' + val,
+                type: "POST",
+                success: function () {
+                    alert(val ? 'Бот запущен' : 'Бот остановлен')
+                },
+                error: function () {
+                    alert('Ошибка. Бот ' + smth + ' не запущен')
+                },
+                dataType: 'json'
+            });
+        });
+    </script>
+{% endblock %}
