@@ -8,28 +8,54 @@ from datetime import datetime
 
 class StateHandler(object):
 
-    def __init__(self, bot_id, bot: TeleBot):
+    def __init__(self, bot_id, bot: TeleBot, botType):
+        self.botType = botType
         self.bot_id = bot_id
         self._bot = bot
         self.__state_functions = {'start': self._start_state}
 
     def _start_state(self, message):
         try:
-            self._bot.send_message(message.chat.id, 'Welcome message')
+            if self.botType == "fi":
+                messId = message.chat.id
+            elif self.botType == "sec":
+                messId = message.from_user.id
+            else:
+                messId = ""
+
+            self._bot.send_message(messId, 'Welcome message')
         except Exception as e:
             print('[Error]{0}'.format(e))
 
     def get_user_query(self, message):
-        return User.objects(bot=self.bot_id, user_id=message.chat.id)
+        if self.botType == "fi":
+            messId = message.chat.id
+
+        elif self.botType == "sec":
+            messId = message.from_user.id
+
+        else:
+            messId = ""
+
+        return User.objects(bot=self.bot_id, user_id=messId)
 
     def get_user(self, message):
         return self.get_user_query(message).first()
 
     def handle_state_with_message(self, message, start=False):
+        print("xz")
         user = self.get_user(message)
         if user is None:
+            if self.botType == "fi":
+                messId = message.chat.id
+
+            elif self.botType == "sec":
+                messId = message.from_user.id
+
+            else:
+                messId = ""
             user = User(bot=self.bot_id,
-                        user_id=message.chat.id,
+                        user_id=messId,
                         first_name=str(message.from_user.first_name),
                         last_name=str(message.from_user.last_name),
                         username=str(message.from_user.username),
@@ -39,14 +65,18 @@ class StateHandler(object):
         self.__state_functions[user['state']](message)
 
     def __register_state(self, name, function_pointer: FunctionType):
+        print("xz2")
         if name != '' and function_pointer is not None:
             self.__state_functions[name] = function_pointer
 
     def _register_states(self, states_list):
+        print("xzz3")
         for state_func in states_list:
             self.__register_state(state_func.__name__, state_func)
 
     def _go_to_state(self, message, state_name):
+        print("shit Its boy")
+        print(state_name)
         if str(type(state_name)) == "<class 'method'>":
             state_name = state_name.__name__
         if state_name in self.__state_functions:

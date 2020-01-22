@@ -44,7 +44,8 @@ class BotManager(metaclass=Singleton):
         t_bot = telebot.TeleBot(bot.token, threaded=False)
         t_bot.remove_webhook()
         Thread(name=f'Bot#{bot.id}-polling-thread', target=t_bot.polling, args=dict(none_stop=True)).start()
-        BotHandlers(bot.id, t_bot)
+        print(bot.botType)
+        BotHandlers(bot.id, t_bot, bot.botType)
         self._bots[str(bot.id)] = t_bot
         print(f"Started Bot#{str(bot.id)} - {t_bot}")
 

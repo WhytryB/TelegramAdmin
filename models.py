@@ -23,6 +23,7 @@ class BotProfile(db.Document):
     photo_file_id = db.StringField()
     active = db.BooleanField(default=False)
     wallet = db.StringField(required=True)
+    botType = db.StringField(default="fi", required=False)
 
     def __unicode__(self):
         return self.name
