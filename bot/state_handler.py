@@ -43,7 +43,7 @@ class StateHandler(object):
         return self.get_user_query(message).first()
 
     def handle_state_with_message(self, message, start=False):
-        print("xz")
+
         user = self.get_user(message)
         if user is None:
             if self.botType == "fi":
@@ -65,17 +65,14 @@ class StateHandler(object):
         self.__state_functions[user['state']](message)
 
     def __register_state(self, name, function_pointer: FunctionType):
-        print("xz2")
         if name != '' and function_pointer is not None:
             self.__state_functions[name] = function_pointer
 
     def _register_states(self, states_list):
-        print("xzz3")
         for state_func in states_list:
             self.__register_state(state_func.__name__, state_func)
 
     def _go_to_state(self, message, state_name):
-        print("shit Its boy")
         print(state_name)
         if str(type(state_name)) == "<class 'method'>":
             state_name = state_name.__name__

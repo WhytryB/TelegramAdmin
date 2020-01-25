@@ -24,7 +24,6 @@ class BotHandlers(object):
 
         @self.bot.message_handler(content_types=['text'])
         def text_handler(message):
-            print("suka1")
             try:
                 if self.botType == "fi":
                     self.bot.send_chat_action(message.chat.id, 'typing')
@@ -35,7 +34,6 @@ class BotHandlers(object):
 
         @self.bot.callback_query_handler(func=lambda call: True)
         def callback_inline(call):
-            print("suja2")
             try:
                 if call.data:
                     if self.botType == "sec":

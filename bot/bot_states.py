@@ -504,7 +504,6 @@ class BotStates(StateHandler):
                                        reply_markup=keybd.set_keyboard(texts, payments.keys(), back_btn=True))
 
     def final_state(self, message, entry=False):
-        print("000011112")
         texts = self.get_texts()
         user = self.get_user(message)
         if entry:
